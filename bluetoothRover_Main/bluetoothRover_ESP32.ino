@@ -42,6 +42,8 @@ void loop() {
   if (SerialBT.available()) // if there are bytes available in the buffer
     readIn = char(SerialBT.read()); // read in one and store it in readIn
   
+  Serial1.print(readIn);
+  
   if (readIn == 'w') {
     rearAxle.forward();
   } else if (readIn == 's') {
@@ -58,7 +60,4 @@ void loop() {
     grabArm1.write(angle);
   }
   delay(20);
-  
-  // Serial1.print('A');
-  // delay(2000);
 }

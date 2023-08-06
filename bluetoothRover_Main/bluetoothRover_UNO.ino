@@ -18,5 +18,5 @@ void loop() {
   Serial.println(uart_receive);
   uart_receive = 'C'; // Debugging purposes
 
-  delay(200);
+  delay(20);
 }
