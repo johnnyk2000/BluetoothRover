@@ -4,8 +4,15 @@ String Text = "reading...";
 
 void setup() {
   size(900,1000);                         // create window of this size
-  myPort = new Serial(this, "COM10", 115200);
-  // myPort = new Serial(this, "dev/tty.ESP32", 115200);
+  
+  String OS = System.getProperty("os.name");
+  System.out.println(OS);
+  if (OS.contains("Windows")) {
+    myPort = new Serial(this, "COM10", 115200);
+  } else {
+    myPort = new Serial(this, "/dev/tty.ESP32", 115200);
+  }
+  
   myPort.bufferUntil('\n');               //delays calling serialEvent unitl reaching '\n'
 }
 
