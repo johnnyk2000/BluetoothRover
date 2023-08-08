@@ -1,3 +1,34 @@
+
+// void face1() {
+//   Serial.println("Face 1");
+// }
+
+// void face2() {
+//   Serial.println("Face 2");
+// }
+
+// void doNothing() {
+//   Serial.println("nothing");
+// }
+
+template <typename F>
+void dispatch(char signal, F callback) {
+  constexpr long SAFE_DELAY = 200;
+  static long baseTime = millis();
+  static char prevSignal = "\0";
+
+  long now = millis();
+
+  Serial.println(signal);
+  if (now - baseTime > SAFE_DELAY) {
+    if (prevSignal != signal) {
+      callback();
+    } 
+    prevSignal = signal;
+  }
+}
+
+
 void setup() {
   Serial.begin(115200);
   while (!Serial) {
@@ -14,31 +45,36 @@ void loop() {
     uart_receive = char(Serial.read()); // Reading characters
   }
 
-  Serial.println("Message Received: ");
-  Serial.println(uart_receive);
+  // Serial.println("Message Received: ");
+  // Serial.println(uart_receive);
 
   switch (uart_receive) {
   case 'w':
   case 's':
     /* moving */
+    dispatch(uart_receive, /*put your function here*/);
     break;
 
   case 'a':
   case 'd':
     /* turning */
+    dispatch(uart_receive, /*put your function here*/);
     break;
 
   case 'e':
   case 'p':
     /* lifting arm */
+    dispatch(uart_receive, /*put your function here*/);
     break;
 
   case 'q':
   case 'i':
     /* lowering arm */
+    dispatch(uart_receive, /*put your function here*/);
     break;
 
   default:
+    // TODO: add null action
     break;
   }
 
