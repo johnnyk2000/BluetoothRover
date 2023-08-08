@@ -11,10 +11,17 @@
 
 BluetoothSerial SerialBT; // declares the Bluetooth object
 
-constexpr int lservoPin = 14;
+constexpr int LEFT_SERVO_PIN = 14;
 
-Navigator rearAxle;
-Servo grabArm1;
+constexpr int EN_A_PIN = 13;
+constexpr int IN_1_PIN = 27;
+constexpr int IN_2_PIN = 33;
+constexpr int IN_3_PIN = 15;
+constexpr int IN_4_PIN = 32;
+constexpr int EN_B_PIN = 12;
+
+Navigator mainAxle;
+Servo leftArm;
 
 void setup() {
   Serial.begin(115200);
@@ -26,17 +33,17 @@ void setup() {
 	ESP32PWM::allocateTimer(1);
 	ESP32PWM::allocateTimer(2);
 	ESP32PWM::allocateTimer(3);
-	grabArm1.setPeriodHertz(50);    // standard 50 hz servo
-	grabArm1.attach(lservoPin, 500, 2400);
-  grabArm1.attach(lservoPin);
-  rearAxle.begin(13, 27, 33, 15, 32, 12);
+	leftArm.setPeriodHertz(50);    // standard 50 hz servo
+	leftArm.attach(LEFT_SERVO_PIN, 500, 2400);
+  
+  mainAxle.begin(EN_A_PIN, IN_1_PIN, IN_2_PIN, IN_3_PIN, IN_4_PIN, EN_B_PIN);
 }
 
 char readIn;
 
 void loop() {
   constexpr int angleDelta = 10;
-  static int angle = 0;
+  static int angleLeft = 0;
 
   readIn = '\0';
   if (SerialBT.available()) // if there are bytes available in the buffer
@@ -45,19 +52,23 @@ void loop() {
   Serial1.print(readIn);
   
   if (readIn == 'w') {
-    rearAxle.forward();
+    mainAxle.forward();
   } else if (readIn == 's') {
-    rearAxle.backup();
+    mainAxle.backup();
+  } else if (readIn == 'a') {
+    mainAxle.left();
+  } else if (readIn == 'd') {
+    mainAxle.right();
   } else {
-    rearAxle.stop();
+    mainAxle.stop();
   }
 
   if (readIn == 'q') {
-    angle = max(angle - angleDelta, 0);
-    grabArm1.write(angle);
+    angleLeft = max(angleLeft - angleDelta, 0);
+    leftArm.write(angleLeft);
   } else if (readIn == 'e') {
-    angle = min(angle + angleDelta, 180);
-    grabArm1.write(angle);
+    angleLeft = min(angleLeft + angleDelta, 180);
+    leftArm.write(angleLeft);
   }
   delay(20);
 }
