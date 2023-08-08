@@ -16,7 +16,33 @@ void loop() {
 
   Serial.println("Message Received: ");
   Serial.println(uart_receive);
-  uart_receive = 'C'; // Debugging purposes
+
+  switch (uart_receive) {
+  case 'w':
+  case 's':
+    /* moving */
+    break;
+
+  case 'a':
+  case 'd':
+    /* turning */
+    break;
+
+  case 'e':
+  case 'p':
+    /* lifting arm */
+    break;
+
+  case 'q':
+  case 'i':
+    /* lowering arm */
+    break;
+
+  default:
+    break;
+  }
+
+  // uart_receive = 'C'; // Debugging purposes
 
   delay(20);
 }
