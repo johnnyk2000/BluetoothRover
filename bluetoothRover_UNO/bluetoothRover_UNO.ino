@@ -1,33 +1,22 @@
-
-// void face1() {
-//   Serial.println("Face 1");
-// }
-
-// void face2() {
-//   Serial.println("Face 2");
-// }
-
-// void doNothing() {
-//   Serial.println("nothing");
-// }
+#include "LCDFunctions.hpp"
 
 template <typename F>
 void dispatch(char signal, F callback) {
   constexpr long SAFE_DELAY = 200;
   static long baseTime = millis();
-  static char prevSignal = "\0";
+  static char prevSignal = '\0';
 
   long now = millis();
 
-  Serial.println(signal);
+  // Serial.println(signal);
   if (now - baseTime > SAFE_DELAY) {
     if (prevSignal != signal) {
       callback();
-    } 
+    }
     prevSignal = signal;
+    baseTime = millis();
   }
 }
-
 
 void setup() {
   Serial.begin(115200);
@@ -52,32 +41,31 @@ void loop() {
   case 'w':
   case 's':
     /* moving */
-    dispatch(uart_receive, /*put your function here*/);
+    dispatch(uart_receive, openEyes);
     break;
 
   case 'a':
   case 'd':
     /* turning */
-    dispatch(uart_receive, /*put your function here*/);
+    dispatch(uart_receive, openEyes);
     break;
 
   case 'e':
   case 'p':
     /* lifting arm */
-    dispatch(uart_receive, /*put your function here*/);
+    dispatch(uart_receive, sweatFace);
     break;
 
   case 'q':
   case 'i':
     /* lowering arm */
-    dispatch(uart_receive, /*put your function here*/);
+    dispatch(uart_receive, sweatFace);
     break;
 
   default:
-    // TODO: add null action
     break;
   }
-
+  
   // uart_receive = 'C'; // Debugging purposes
 
   delay(20);

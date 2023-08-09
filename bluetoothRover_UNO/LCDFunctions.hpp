@@ -1,3 +1,5 @@
+#pragma once
+
 // C++ code
 //
 // include the library code:
