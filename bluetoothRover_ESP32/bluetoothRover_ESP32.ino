@@ -46,10 +46,10 @@ char readIn = ' ';
 
 void loop() {
   constexpr int angleDelta = 10;
-  static int angleLeft = 10;
-  static int angleLeftPrev = 10;
-  static int angleRight = 10;
-  static int angleRightPrev = 10;
+  static int angleLeft = 0;
+  static int angleLeftPrev = 0;
+  static int angleRight = 0;
+  static int angleRightPrev = 0;
 
   // if there are bytes available in the buffer
   if (SerialBT.available()) {
@@ -76,7 +76,7 @@ void loop() {
     break;
 
   case 'q':
-    angleLeft = max(angleLeft - angleDelta, 10);
+    angleLeft = max(angleLeft - angleDelta, 0);
     mainAxle.stop();
     if (angleLeft != angleLeftPrev) {
       leftArm.write(angleLeft);
@@ -85,7 +85,7 @@ void loop() {
     break;
 
   case 'e':
-    angleLeft = min(angleLeft + angleDelta, 170);
+    angleLeft = min(angleLeft + angleDelta, 180);
     mainAxle.stop();
     if (angleLeft != angleLeftPrev) {
       leftArm.write(angleLeft);
@@ -94,7 +94,7 @@ void loop() {
     break;
 
   case 'i':
-    angleRight = max(angleRight - angleDelta, 10);
+    angleRight = max(angleRight - angleDelta, 0);
     mainAxle.stop();
     if (angleRight != angleRightPrev) {
       rightArm.write(angleRight);
@@ -103,7 +103,7 @@ void loop() {
     break;
 
   case 'p':
-    angleRight = min(angleRight + angleDelta, 170);
+    angleRight = min(angleRight + angleDelta, 180);
     mainAxle.stop();
     if (angleRight != angleRightPrev) {
       rightArm.write(angleRight);
