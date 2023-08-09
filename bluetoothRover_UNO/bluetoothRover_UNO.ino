@@ -23,7 +23,7 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
-  // setupLCD();
+  setupLCD();
   delay(200);
 }
 
@@ -73,5 +73,5 @@ void loop() {
   
   // uart_receive = 'C'; // Debugging purposes
 
-  delay(20);
+  delay(40);
 }

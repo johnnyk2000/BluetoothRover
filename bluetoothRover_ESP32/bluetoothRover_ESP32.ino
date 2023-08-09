@@ -11,7 +11,7 @@
 BluetoothSerial SerialBT; // declares the Bluetooth object
 
 constexpr int LEFT_SERVO_PIN = 14;
-constexpr int RIGHT_SERVO_PIN = 11;
+constexpr int RIGHT_SERVO_PIN = 26;
 
 constexpr int EN_A_PIN = 13;
 constexpr int IN_1_PIN = 27;
@@ -75,21 +75,25 @@ void loop() {
 
   case 'q':
     angleLeft = max(angleLeft - angleDelta, 0);
+    mainAxle.stop();
     leftArm.write(angleLeft);
     break;
 
   case 'e':
     angleLeft = min(angleLeft + angleDelta, 180);
+    mainAxle.stop();
     leftArm.write(angleLeft);
     break;
 
   case 'i':
     angleRight = max(angleRight - angleDelta, 0);
+    mainAxle.stop();
     rightArm.write(angleRight);
     break;
 
   case 'p':
     angleRight = min(angleRight + angleDelta, 180);
+    mainAxle.stop();
     rightArm.write(angleRight);
     break;
 
@@ -101,5 +105,5 @@ void loop() {
     break;
   }
 
-  delay(20);
+  delay(40);
 }
