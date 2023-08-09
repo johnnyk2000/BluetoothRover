@@ -1,7 +1,8 @@
 #include <ESP32Servo.h>
 
-#include "BluetoothSerial.h"
 #include "Navigator.hpp"
+#include "BluetoothSerial.h"
+
 
 #if !defined(CONFIG_BT_ENABLED) ||                                             \
     !defined(CONFIG_BLUEDROID_ENABLED) // error catching
@@ -31,93 +32,54 @@ void setup() {
   Serial1.begin(115200);
 
   ESP32PWM::allocateTimer(0);
-  ESP32PWM::allocateTimer(1);
-  ESP32PWM::allocateTimer(2);
-  ESP32PWM::allocateTimer(3);
-  leftArm.setPeriodHertz(50); // standard 50 hz servo
-  leftArm.attach(LEFT_SERVO_PIN, 500, 2400);
-  rightArm.setPeriodHertz(50);    // standard 50 hz servo
-  rightArm.attach(RIGHT_SERVO_PIN, 500, 2400);
-
+	ESP32PWM::allocateTimer(1);
+	ESP32PWM::allocateTimer(2);
+	ESP32PWM::allocateTimer(3);
+	leftArm.setPeriodHertz(50);    // standard 50 hz servo
+	leftArm.attach(LEFT_SERVO_PIN, 500, 2400);
+	rightArm.setPeriodHertz(50);    // standard 50 hz servo
+	rightArm.attach(RIGHT_SERVO_PIN, 500, 2400);
+  
   mainAxle.begin(EN_A_PIN, IN_1_PIN, IN_2_PIN, IN_3_PIN, IN_4_PIN, EN_B_PIN);
 }
 
-char readIn = ' ';
+char readIn;
 
 void loop() {
   constexpr int angleDelta = 10;
   static int angleLeft = 0;
-  static int angleLeftPrev = 0;
   static int angleRight = 0;
-  static int angleRightPrev = 0;
 
-  // if there are bytes available in the buffer
-  if (SerialBT.available()) {
+  readIn = '\0';
+  if (SerialBT.available()) // if there are bytes available in the buffer
     readIn = char(SerialBT.read()); // read in one and store it in readIn
-  }
-
-  Serial1.print(readIn);
-
-  switch (readIn) {
-  case 'w':
+  
+  // Serial1.print(readIn);
+  
+  if (readIn == 'w') {
     mainAxle.forward();
-    break;
-
-  case 's':
+  } else if (readIn == 's') {
     mainAxle.backup();
-    break;
-
-  case 'a':
+  } else if (readIn == 'a') {
     mainAxle.left();
-    break;
-
-  case 'd':
+  } else if (readIn == 'd') {
     mainAxle.right();
-    break;
-
-  case 'q':
-    angleLeft = max(angleLeft - angleDelta, 0);
+  } else {
     mainAxle.stop();
-    if (angleLeft != angleLeftPrev) {
-      leftArm.write(angleLeft);
-    }
-    angleLeftPrev = angleLeft;
-    break;
-
-  case 'e':
-    angleLeft = min(angleLeft + angleDelta, 180);
-    mainAxle.stop();
-    if (angleLeft != angleLeftPrev) {
-      leftArm.write(angleLeft);
-    }
-    angleLeftPrev = angleLeft;
-    break;
-
-  case 'i':
-    angleRight = max(angleRight - angleDelta, 0);
-    mainAxle.stop();
-    if (angleRight != angleRightPrev) {
-      rightArm.write(angleRight);
-    }
-    angleRightPrev = angleRight;
-    break;
-
-  case 'p':
-    angleRight = min(angleRight + angleDelta, 180);
-    mainAxle.stop();
-    if (angleRight != angleRightPrev) {
-      rightArm.write(angleRight);
-    }
-    angleRightPrev = angleRight;
-    break;
-
-  case ' ':
-    mainAxle.stop();
-    break;
-
-  default:
-    break;
   }
 
-  delay(40);
+  if (readIn == 'q') {
+    angleLeft = max(angleLeft - angleDelta, 0);
+    leftArm.write(angleLeft);
+  } else if (readIn == 'e') {
+    angleLeft = min(angleLeft + angleDelta, 180);
+    leftArm.write(angleLeft);
+  } else if (readIn == 'i') {
+    angleRight = max(angleRight - angleDelta, 0);
+    rightArm.write(angleRight);
+  } else if (readIn == 'p') {
+    angleRight = min(angleRight + angleDelta, 180);
+    rightArm.write(angleRight);
+  }
+  delay(20);
 }
