@@ -1,29 +1,29 @@
 #include "LCDFunctions.hpp"
 
+// void face1() {
+//   Serial.println("Open Eyes");
+// }
+// void face2() {
+//   Serial.println("Sweat Face");
+// }
+
 template <typename F>
 void dispatch(char signal, F callback) {
-  constexpr long SAFE_DELAY = 200;
-  static long baseTime = millis();
-  static char prevSignal = '\0';
+  static char prevSignal = ' ';
 
-  long now = millis();
-
-  // Serial.println(signal);
-  if (now - baseTime > SAFE_DELAY) {
-    if (prevSignal != signal) {
-      callback();
-    }
+  if (prevSignal != signal) {
+    callback();
     prevSignal = signal;
-    baseTime = millis();
   }
 }
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("successful connection");
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
-
+  // setupLCD();
   delay(200);
 }
 
@@ -60,6 +60,11 @@ void loop() {
   case 'i':
     /* lowering arm */
     dispatch(uart_receive, sweatFace);
+    break;
+
+  case ' ':
+    /* idling */
+    dispatch(uart_receive, openEyes);
     break;
 
   default:

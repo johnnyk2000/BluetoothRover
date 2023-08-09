@@ -61,6 +61,9 @@ void draw() {
   } else if (state == 8) {
     myPort.write('p');
     state = 0;
+  } else if (state == 9) {
+    myPort.write(' ');
+    state = 0;
   }
   
 }
@@ -82,4 +85,6 @@ void keyPressed() {               //called whenever a key is pressed, key is aut
     state = 7;
   else if (key == 'p')
     state = 8;
+  else if (key == ' ')
+    state = 9;
 }

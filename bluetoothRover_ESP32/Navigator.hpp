@@ -77,7 +77,7 @@ void Navigator::backup() {
   digitalWrite(m_enB, m_torque);
 }
 
-void Navigator::right() {
+void Navigator::left() {
   digitalWrite(m_in1, HIGH);
   digitalWrite(m_in2, LOW);
   digitalWrite(m_in3, LOW);
@@ -86,7 +86,7 @@ void Navigator::right() {
   digitalWrite(m_enB, m_torque);
 }
 
-void Navigator::left() {
+void Navigator::right() {
   digitalWrite(m_in1, LOW);
   digitalWrite(m_in2, HIGH);
   digitalWrite(m_in3, HIGH);
